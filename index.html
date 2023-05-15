@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chatroom</title>
+    <style>
+        /* Light Mode */
+        body {
+            background-color: #ffffff;
+            color: #000000;
+        }
+
+        /* Dark Mode */
+        body.dark-mode {
+            background-color: #333333;
+            color: #ffffff;
+        }
+
+        #chatbox {
+            width: 400px;
+            height: 300px;
+            border: 1px solid #ccc;
+            overflow: auto;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="chatbox"></div>
+    <form action="phpinfo.php" method="post">
+        <input type="text" name="name" placeholder="Your name" required>
+        <br>
+        <textarea name="message" placeholder="Enter your message" rows="3" required></textarea>
+        <br>
+        <button type="submit">Send</button>
+    </form>
+    <button id="dark-mode-toggle" onclick="toggleDarkMode()">Toggle Dark Mode</button>
+    <script>
+        // Function to toggle dark mode
+        function toggleDarkMode() {
+            document.body.classList.toggle("dark-mode");
+        }
+
+        // Function to update the chatbox with the message history
+        function updateChatbox() {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    document.getElementById("chatbox").innerHTML = this.responseText;
+                }
+            };
+            xhttp.open("GET", "getmessages.php", true);
+            xhttp.send();
+        }
+
+        // Function to periodically update the chatbox
+        function startChatboxUpdate() {
+            updateChatbox();
+            setInterval(updateChatbox, 2000);
+        }
+
+        // Initial chatbox update
+        startChatboxUpdate();
+    </script>
+</body>
+</html>
